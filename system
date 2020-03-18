@@ -1,0 +1,446 @@
+#include <iostream>
+#include <iomanip>
+#include <cstring>
+//#include<string.h>
+//#include<fstream>
+//#include<windows.h>
+using namespace std;
+#define N 20
+
+class dish   //一道菜品所应该包含的属性（名字，菜品编码，价格，类型，库存）
+{
+public:
+    char name[N];	//名字
+	int num;	//菜品编码
+	int price;   //价格
+	char type[N];	//类型
+	int total;		//这道菜剩余总数量
+	dish *next;
+}*head=NULL,*p1,*p2;
+int n=0;
+
+class stuff   //一种食材所应该包含的属性（名字，编码，库存）
+{
+public:
+    char na[N];	//名字
+	int numb;	//食材编码
+	int inv;		//食材剩余数量
+	stuff *next;
+}*title=NULL,*q1,*q2;
+int m=0;
+
+class CC:public dish     //定义炒菜类继承菜品类
+{
+public:
+char taste[N];//口味
+}*s1,*s2;
+
+class ZS:public dish     //定义主食类继承菜品类
+{
+public:
+char digit[N];//计数单位
+}*t1,*t2;
+
+
+/********************增加菜品**********************/
+
+dish *creat()    //建立链表
+{
+    p1=new(dish);//开辟动态内存存储空间存放新结点
+    cout<<"请输入要增加的菜品编号，输入为0时停止输入: ";
+    cin>>p1->num;
+    while(p1->num!=0)
+    {
+        n++;
+        if(n==1)
+            head=p1;            //第一个结点赋给头结点
+        else
+            p2->next=p1;     //往下链接新建立的结点
+            cout<<"请输入菜品名字：";
+            cin>>p1->name;
+            cout<<"请输入菜品价格：";
+            cin>>p1->price;
+            cout<<"请输入菜品类型：";
+            cin>>p1->type;
+//			if(p1->type = 'CC')
+//                {
+//                cout<<"请输入口味：";
+//                cin>>s1->taste;s1=s2;
+//                }
+//          else
+//                {
+//                cout<<"请输入数量单位：";
+//                cin>>t1->digit;t1=t2;
+//                }
+            cout<<"请输入要添加该菜品数目：";
+			cin>>p1->total;p2=p1;
+        cout<<"请输入要增加的菜品编号，输入为0时停止输入: ";
+        p1=new(dish);        //继续开辟动态内存存储空间存放新结点
+        cin>>p1->num;
+
+    }
+	cout<<endl<<endl;
+    delete p1;                  //停止建立新结点
+    p2->next=NULL;
+    return head;
+}
+
+
+/*********************输出显示当前菜品信息*******************/
+
+void print(dish *head)//输出链表
+{   //char choice;     //窗口清零定义任意键
+    dish *p;
+    p=head;
+    if(p==NULL)
+	{
+		cout<<"菜品库里没有菜品! "<<endl;
+        return;
+	}
+    cout<<"目前菜品库所含菜品信息为："<<endl
+		<<"编号"<<"       "<<"名字"<<"       "
+		<<"价格"<<"       "<<"类型"<<"       "
+		<<"数目"<<endl;
+	do
+    {
+		cout<<p->num<<"            "<<p->name<<setw(10)
+			<<p->price<<"         "<<p->type<<setw(10)
+			<<p->total<<endl;
+        p=p->next;
+    }
+    while(p!=NULL);
+
+//     cout<<"请输入任意键返回查看管理菜单：";
+//     cin>>choice;void manage();
+//     manage();
+
+//     system("cls");                         //窗口清零
+}
+
+/****************删除菜品**************************/
+
+dish *del(dish *head)         //删除结点
+{
+    dish *p1,*p2;
+	int num;
+	if(head==NULL)          //如果原先链表为空
+    {
+        cout<<"菜品库里没有菜品!"<<endl;
+        return head;
+    }
+	cout<<"请输入要删除菜品的编码："<<endl;
+	cin>>num;
+    p1=head;
+    while(num!=p1->num && p1->next!=NULL)     //找不到相应的结点就往下继续搜索
+    {
+        p2=p1;
+        p1=p1->next;
+    }
+    if(num==p1->num)         //找到结点
+    {
+        if(p1==head)            //结点是第一位
+            head=p1->next;
+        else                    //结点不是第一位
+            p2->next=p1->next;
+        cout<<"删除成功"<<endl<<endl;
+        n--;m--;
+		print(head);
+    }
+    else
+        cout<<"不存在该编号的菜品"<<endl<<endl;
+    return head;
+
+}
+
+/****************通过类型查询菜品**************************/
+
+void find_type(dish *head)         //删除结点
+{
+    dish *p1;
+	char type[N];
+	cout<<"请输入要查询的菜品类型："<<endl;
+	cin>>type;
+    if(head==NULL)          //如果原先链表为空
+    {
+        cout<<"菜品库里没有菜品!"<<endl;
+		return;
+    }
+    p1=head;
+    while(strcmp(type,p1->type)!=0 && p1->next!=NULL)     //找不到相应的结点就往下继续搜索
+    {
+        p1=p1->next;
+    }
+    if(strcmp(type,p1->type)==0)         //找到结点
+    {
+        cout<<"查找到的菜品信息为："<<endl
+		<<"编号"<<"    "<<"名字"<<"    "
+		<<"价格"<<"    "<<"类型"<<"    "
+		<<"数目"<<endl;
+		cout<<p1->num<<setw(10)<<p1->name<<setw(7)
+			<<p1->price<<setw(10)<<p1->type<<setw(8)
+			<<p1->total<<endl;
+    }
+    else
+        cout<<"找不到该菜品!"<<endl<<endl;
+}
+
+/****************通过菜品名查询菜品**************************/
+
+void find_name(dish *head)         //删除结点
+{
+    dish *p1;
+	char name[N];
+	cout<<"请输入要查询的菜品名字："<<endl;
+	cin>>name;
+	  if(head==NULL)          //如果原先链表为空
+    {
+        cout<<"菜品库里没有菜品!"<<endl;
+		return;
+    }
+    p1=head;
+    while(strcmp(name,p1->name)!=0 && p1->next!=NULL)     //找不到相应的结点就往下继续搜索
+    {
+        p1=p1->next;
+    }
+    if(strcmp(name,p1->name)==0)         //找到结点
+    {
+        cout<<"查找到的菜品信息为："<<endl
+		<<"编号"<<"    "<<"名字"<<"    "
+		<<"价格"<<"    "<<"类型"<<"    "
+		<<"数目"<<endl;
+		cout<<p1->num<<setw(10)<<p1->name<<setw(7)
+			<<p1->price<<setw(10)<<p1->type<<setw(8)
+			<<p1->total<<endl;
+    }
+    else
+        cout<<"找不到该菜品!"<<endl<<endl;
+}
+
+/*********************售出菜品*******************/
+
+dish *sell(dish *head)
+{
+	if(head==NULL)          //如果原先链表为空
+    {
+        cout<<"菜品库里没有菜品!"<<endl;
+		return head;
+    }
+	cout<<"请输入售出菜品的名称："<<endl;
+	char name[N];
+	cin>>name;
+	dish *p1;
+    p1=head;
+    while(strcmp(name,p1->name)!=0 && p1->next!=NULL)     //找不到相应的结点就往下继续搜索
+    {
+        p1=p1->next;
+    }
+    if(strcmp(name,p1->name)==0)         //找到结点
+    {
+		cout<<"查找到的菜品信息为："<<endl
+		<<"编号"<<"    "<<"名字"<<"    "
+		<<"价格"<<"    "<<"类型"<<"    "
+		<<"数目"<<endl;
+		cout<<p1->num<<setw(10)<<p1->name<<setw(7)
+			<<p1->price<<setw(10)<<p1->type<<setw(8)
+			<<p1->total<<endl;
+        if(p1->total!=0)
+		{
+        cout<<"确定要售出该菜品吗？"<<endl
+            <<"1.确定"<<'\t'<<"2.取消"<<endl;
+			int num; cin>>num;
+			switch(num)
+			{
+				case 1:
+						cout<<"售出成功!"<<endl;
+						(p1->total)--;break;
+				case 2: break;
+				default:cout<<"输入有误!"<<endl;break;
+			}
+        }
+		else
+			cout<<"菜品已全被售出!"<<endl;
+    }
+    else
+        cout<<"找不到该菜品!"<<endl<<endl;
+	return head;
+}
+
+/*********************购入食材*********************/
+
+stuff *buy()                 //建立链表
+{
+    q1=new(stuff);            //开辟动态内存存储空间存放新结点
+    cout<<"请输入要购入食材的编码，输入为0时停止输入: ";
+    cin>>q1->numb;
+    while(q1->numb!=0)
+    {
+        m++;
+        if(m==1)
+            title=q1;            //第一个结点赋给头结点
+        else
+            q2->next=q1;     //往下链接新建立的结点
+            cout<<"请输入食材名字：";
+            cin>>q1->na;
+            cout<<"请输入要购入该食材数目：";
+			cin>>q1->inv;
+            q2=q1;
+            cout<<"请输入要增加的食材编码，输入为0时停止输入: ";
+        q1=new(stuff);        //继续开辟动态内存存储空间存放新结点
+        cin>>q1->numb;
+    }
+	cout<<endl<<endl;
+    delete q1;                  //停止建立新结点stuff
+    q2->next=NULL;
+    return title;
+
+}
+
+/*********************输出显示当前食材信息*******************/
+
+void print(stuff *title)//输出链表
+{
+    stuff *q;
+    q=title;
+    if(q==NULL)
+	{
+		cout<<"仓库里没有食材! "<<endl;
+        return;
+	}
+    cout<<"目前仓库所含食材信息为："<<endl
+		<<"编号"<<"       "<<"名字"<<"       "
+		<<"库存"<<endl;
+	do
+    {
+		cout<<q->numb<<"            "<<q->na<<setw(10)
+			<<q->inv<<endl;
+        q=q->next;
+    }
+    while(q!=NULL);
+}
+
+/*********************删除食材************************/
+stuff *del(stuff *title)         //删除结点
+{
+    stuff *q1,*q2;
+	int numb;
+	if(title==NULL)          //如果原先链表为空
+    {
+        cout<<"仓库里没有食材!"<<endl;
+        return title;
+    }
+	cout<<"请输入要删除食材的编码："<<endl;
+	cin>>numb;
+    q1=title;
+    while(numb!=q1->numb && q1->next!=NULL)     //找不到相应的结点就往下继续搜索
+    {
+        q2=q1;
+        q1=q1->next;
+    }
+    if(numb==q1->numb)         //找到结点
+    {
+        if(q1==title)            //结点是第一位
+            title=q1->next;
+        else                    //结点不是第一位
+            q2->next=q1->next;
+        cout<<"删除成功"<<endl<<endl;
+        m--;
+		print(title);
+    }
+    else
+        cout<<"不存在该编号的食材"<<endl<<endl;
+    return title;
+}
+
+/***********************查询菜单***********************/
+
+void find()
+{
+	int num;
+	cout<<"	***************************************************"<<endl;
+	cout<<"	*           请输入对应功能的数字完成操作          *"<<endl;
+	cout<<"	*                 1.通过类型查找                  *"<<endl;
+	cout<<"	*                 2.通过菜品名查找                *"<<endl;
+	cout<<"	***************************************************"<<endl;
+	cin>>num;
+	switch(num)
+	{
+	case 1:find_type(head);break;
+	case 2:find_name(head);break;
+	default:cout<<"输入有误!"<<endl;break;
+	}
+}
+
+/***********************管理菜单***********************/
+
+void manage()
+{
+	int num1;
+	cout<<"请输入管理员密码(123456)："<<endl;//规定只有管理员才有权限增减菜品
+	cin>>num1;
+	if(num1==123456)
+	{
+		int num;
+		cout<<"	***************************************************"<<endl;
+		cout<<"	*           请输入对应功能的数字完成操作          *"<<endl;
+		cout<<"	*                     1.增加菜品                  *"<<endl;
+		cout<<"	*                     2.删除菜品                  *"<<endl;
+		cout<<"	*                     3.删除食材                  *"<<endl;
+		cout<<"	***************************************************"<<endl;
+		cin>>num;
+		switch(num)
+		{
+		case 1:head=creat();
+				print(head);
+				break;
+		case 2:head=del(head);break;
+		case 3:title=del(title);break;
+		default:cout<<"输入有误!"<<endl;break;
+		}
+	}
+	else
+        cout<<"输入错误，你没有权限修改饭店管理系统!"<<endl;
+}
+void displaymain()
+{
+	cout<<"	****************************************************"<<endl;
+	cout<<"	*           请输入对应功能的数字完成操作           *"<<endl;
+	cout<<"	*                     1.查询                       *"<<endl;
+	cout<<"	*                     2.售出菜品                   *"<<endl;
+	cout<<"	*                     3.购入食材                   *"<<endl;
+	cout<<"	*                     4.管理                       *"<<endl;
+	cout<<"	*                     5.菜品库                     *"<<endl;
+	cout<<"	*                     6.食材库                     *"<<endl;
+	cout<<"	*                     7.退出                       *"<<endl;
+	cout<<"	****************************************************"<<endl;
+}
+int main()
+{
+    //system("color F0");//设置界面颜色
+	cout<<endl<<"                        欢迎使用饭店管理系统"<<endl<<endl;
+	int choice=1;
+	while(choice!=0)
+	{
+		displaymain();
+		cin>>choice;
+		switch(choice)
+		{
+			case 1:	find();break;
+			case 2: head=sell(head);break;
+			case 3: title=buy();print(title);break;
+			case 4:	manage();break;
+			case 5:	print(head);break;
+			case 6:	print(title);break;
+			case 7:	choice=0;break;
+			default:cout<<"输入有误，请重新输入!"<<endl;break;
+		}
+	}
+	
+cout<<"	***************************************************"<<endl;
+	cout<<"	*                                                 *"<<endl;
+	cout<<"	*                  感谢您的使用!                  *"<<endl;
+	cout<<"	*                                                 *"<<endl;
+	cout<<"	*     designer:何佳琪          from:微机1604      *"<<endl;
+	cout<<"	*                                                 *"<<endl;
+	cout<<"	***************************************************"<<endl;
+	return 0;
+}
